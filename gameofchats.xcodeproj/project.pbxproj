@@ -9,12 +9,14 @@
 /* Begin PBXBuildFile section */
 		8E94ACBF21989E3E003923E2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E94ACBE21989E3E003923E2 /* AppDelegate.swift */; };
 		8E94ACC121989E3E003923E2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E94ACC021989E3E003923E2 /* ViewController.swift */; };
-		8E94ACC421989E3E003923E2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E94ACC221989E3E003923E2 /* Main.storyboard */; };
 		8E94ACC721989E3E003923E2 /* gameofchats.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8E94ACC521989E3E003923E2 /* gameofchats.xcdatamodeld */; };
 		8E94ACC921989E3F003923E2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8E94ACC821989E3F003923E2 /* Assets.xcassets */; };
 		8E94ACCC21989E3F003923E2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E94ACCA21989E3F003923E2 /* LaunchScreen.storyboard */; };
 		8E94ACD721989E3F003923E2 /* gameofchatsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E94ACD621989E3F003923E2 /* gameofchatsTests.swift */; };
 		8E94ACE221989E3F003923E2 /* gameofchatsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E94ACE121989E3F003923E2 /* gameofchatsUITests.swift */; };
+		8E94ACF12198A09C003923E2 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E94ACF02198A09C003923E2 /* LoginController.swift */; };
+		8E94ACF42198A2DD003923E2 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E94ACF32198A2DD003923E2 /* Constants.swift */; };
+		8E94ACF62198CBE9003923E2 /* TextFieldBottomLineExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E94ACF52198CBE9003923E2 /* TextFieldBottomLineExtention.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,7 +40,6 @@
 		8E94ACBB21989E3E003923E2 /* gameofchats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = gameofchats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E94ACBE21989E3E003923E2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8E94ACC021989E3E003923E2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		8E94ACC321989E3E003923E2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8E94ACC621989E3E003923E2 /* gameofchats.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = gameofchats.xcdatamodel; sourceTree = "<group>"; };
 		8E94ACC821989E3F003923E2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8E94ACCB21989E3F003923E2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -49,6 +50,9 @@
 		8E94ACDD21989E3F003923E2 /* gameofchatsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = gameofchatsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E94ACE121989E3F003923E2 /* gameofchatsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gameofchatsUITests.swift; sourceTree = "<group>"; };
 		8E94ACE321989E3F003923E2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8E94ACF02198A09C003923E2 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
+		8E94ACF32198A2DD003923E2 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		8E94ACF52198CBE9003923E2 /* TextFieldBottomLineExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldBottomLineExtention.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,9 +103,9 @@
 		8E94ACBD21989E3E003923E2 /* gameofchats */ = {
 			isa = PBXGroup;
 			children = (
+				8E94ACF22198A28F003923E2 /* Helpers */,
+				8E94ACEF2198A05E003923E2 /* Controllers */,
 				8E94ACBE21989E3E003923E2 /* AppDelegate.swift */,
-				8E94ACC021989E3E003923E2 /* ViewController.swift */,
-				8E94ACC221989E3E003923E2 /* Main.storyboard */,
 				8E94ACC821989E3F003923E2 /* Assets.xcassets */,
 				8E94ACCA21989E3F003923E2 /* LaunchScreen.storyboard */,
 				8E94ACCD21989E3F003923E2 /* Info.plist */,
@@ -126,6 +130,24 @@
 				8E94ACE321989E3F003923E2 /* Info.plist */,
 			);
 			path = gameofchatsUITests;
+			sourceTree = "<group>";
+		};
+		8E94ACEF2198A05E003923E2 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				8E94ACF02198A09C003923E2 /* LoginController.swift */,
+				8E94ACC021989E3E003923E2 /* ViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		8E94ACF22198A28F003923E2 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				8E94ACF32198A2DD003923E2 /* Constants.swift */,
+				8E94ACF52198CBE9003923E2 /* TextFieldBottomLineExtention.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -234,7 +256,6 @@
 			files = (
 				8E94ACCC21989E3F003923E2 /* LaunchScreen.storyboard in Resources */,
 				8E94ACC921989E3F003923E2 /* Assets.xcassets in Resources */,
-				8E94ACC421989E3E003923E2 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,7 +280,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E94ACF42198A2DD003923E2 /* Constants.swift in Sources */,
 				8E94ACC121989E3E003923E2 /* ViewController.swift in Sources */,
+				8E94ACF12198A09C003923E2 /* LoginController.swift in Sources */,
+				8E94ACF62198CBE9003923E2 /* TextFieldBottomLineExtention.swift in Sources */,
 				8E94ACBF21989E3E003923E2 /* AppDelegate.swift in Sources */,
 				8E94ACC721989E3E003923E2 /* gameofchats.xcdatamodeld in Sources */,
 			);
@@ -297,14 +321,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		8E94ACC221989E3E003923E2 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				8E94ACC321989E3E003923E2 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		8E94ACCA21989E3F003923E2 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
