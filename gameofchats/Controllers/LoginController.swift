@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import FirebaseDatabase
+import FirebaseAuth
 
 class LoginController: UIViewController {
     
@@ -28,6 +30,7 @@ class LoginController: UIViewController {
         button.layer.cornerRadius = 3
         button.layer.masksToBounds = true
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.addTarget(self, action: #selector(newUserRegistration), for: .touchUpInside)
         return button
     }()
     
@@ -92,6 +95,40 @@ class LoginController: UIViewController {
         setupSegmentedControlView()
         setupProfileImageViewConstraints()
     }
+    
+    @objc func newUserRegistration(){
+        guard let email = emailTextField.text, let password = passwordTextField.text, let name = nameTextField.text
+            else{
+                print("Please enter valid form data")
+                return
+        }
+        
+        Auth.auth().createUser(withEmail: email, password: password) {(authResult, error) in
+            if  error != nil {
+                print("Error! : ", error! )
+                return
+            }
+            
+//            guard let user = authResult?.user else { return }
+            guard let uid = authResult?.user.uid else {return}
+            
+            var ref: DatabaseReference!
+            ref = Database.database().reference(fromURL: "https://gameofchats-lbta.firebaseio.com/")
+            let userReference = ref.child("users").child(uid)
+            let values = ["name": name, "email": email]
+            userReference.updateChildValues(values, withCompletionBlock: { (writeError, ref) in
+                if writeError != nil{
+                    print("Error: Unable to register new user. ", writeError!)
+                    return
+                }
+                
+                print("New user was registered successfully")
+            })
+            
+
+        }
+    }
+    
     
     /*
      Constraints oveerrirde functions for subviews gose here
