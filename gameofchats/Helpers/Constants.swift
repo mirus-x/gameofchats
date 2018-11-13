@@ -16,6 +16,10 @@ struct Colors {
     
 }
 
+struct FontSizes {
+    static let x16 = UIFont.systemFont(ofSize: 16)
+}
+
 extension UIColor{
     
     convenience init(r: CGFloat, g: CGFloat, b: CGFloat) {
