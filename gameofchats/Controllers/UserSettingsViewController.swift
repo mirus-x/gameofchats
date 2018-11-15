@@ -9,9 +9,10 @@
 import UIKit
 import FirebaseDatabase
 
-class UserSettingsViewController: UIViewController {
+class UserSettingsViewController: UIViewController, UIImagePickerControllerDelegate {
     
     var profileState: Bool = false
+    
     
     let profileContainerView: UIView = {
         let view = UIView()
@@ -19,13 +20,6 @@ class UserSettingsViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 5
         view.layer.masksToBounds = true
-        return view
-    }()
-    
-    let profileBorderDevider: UIView = {
-        let view = UIView()
-        view.backgroundColor = Colors.borderCololor
-        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -46,24 +40,43 @@ class UserSettingsViewController: UIViewController {
         imageView.image = UIImage(named: "wolf")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = UIView.ContentMode.scaleAspectFill
+        imageView.isUserInteractionEnabled = false
         return imageView
     }()
     
-    let profileEmailLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Email: "
-        label.textColor = Colors.loginRegBtn
-        return label
+    
+    
+    let profileEmailField: UITextField = {
+        let tf = UITextField()
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        tf.text = "Email: "
+        tf.textColor = Colors.loginRegBtn
+        tf.isUserInteractionEnabled = false
+        return tf
     }()
     
+    let profileNameField: UITextField = {
+        let tf = UITextField()
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        tf.text = "Name: "
+        tf.textColor = Colors.loginRegBtn
+        tf.isUserInteractionEnabled = false
+        tf.setBottomBorder()
+        return tf
+    }()
     
-    let profileNameLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Name: "
-        label.textColor = Colors.loginRegBtn
-        return label
+    let profileDeleteButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = Colors.loginRegBtn
+        button.setTitle("Delete profile", for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitleColor(Colors.white, for: .normal)
+        button.layer.cornerRadius = 3
+        button.layer.masksToBounds = true
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.titleEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
+        button.addTarget(self, action: #selector(handleProfileDelete), for: .touchUpInside)
+        return button
     }()
     
     override func viewDidLoad() {
@@ -75,35 +88,52 @@ class UserSettingsViewController: UIViewController {
         
         view.addSubview(profileContainerView)
         view.addSubview(profileImageContainerView)
+        view.addSubview(profileDeleteButton)
         
         setupProfileContainerViewConstraints()
         setupProfileImageViewConstraints()
+        setupProfileDeleteButtonConstraints()
+    }
+    
+    @objc func handleProfileDelete(){
+    
     }
     
     
+    var profileDBHC: NSLayoutConstraint?
     @objc func saveUserProfile(){
         //save edited information to the database
+        profileDBHC?.constant = 0
         
-        
-        
-        
-        
-        
+        profileEmailField.isUserInteractionEnabled = false
+        profileNameField.isUserInteractionEnabled = false
         // change button state
         let rightNavButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editUserProfile))
         rightNavButton.tintColor = Colors.white
         navigationItem.rightBarButtonItem = rightNavButton
+        
+        profileImageView.isUserInteractionEnabled = false
     }
     
     @objc func editUserProfile(){
         // show edit information view
         
-        
-        
+        profileDBHC?.constant = 50
+        profileEmailField.isUserInteractionEnabled = true
+        profileNameField.isUserInteractionEnabled = true
         //change button state (my be need to define global button ???
         let rightNavButton = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveUserProfile))
         rightNavButton.tintColor = Colors.white
         navigationItem.rightBarButtonItem = rightNavButton
+        
+        let pictureTap = UITapGestureRecognizer(target: self, action: #selector(changeUserProfileImage))
+        profileImageView.addGestureRecognizer(pictureTap)
+        profileImageView.isUserInteractionEnabled = true
+        
+    }
+    
+    @objc func changeUserProfileImage(){
+        print("image tapped")
     }
     
     
@@ -129,24 +159,18 @@ class UserSettingsViewController: UIViewController {
         profileContainerViewHeightAncor = profileContainerView.heightAnchor.constraint(equalToConstant: 100)
         profileContainerViewHeightAncor?.isActive = true
         
-        profileContainerView.addSubview(profileNameLabel)
-        profileContainerView.addSubview(profileBorderDevider)
-        profileContainerView.addSubview(profileEmailLabel)
+        profileContainerView.addSubview(profileNameField)
+        profileContainerView.addSubview(profileEmailField)
         
-        profileNameLabel.topAnchor.constraint(equalTo: profileContainerView.topAnchor, constant: 0).isActive=true
-        profileNameLabel.leftAnchor.constraint(equalTo: profileContainerView.leftAnchor, constant: 10).isActive = true
-        profileNameLabel.rightAnchor.constraint(equalTo: profileContainerView.rightAnchor, constant: -10).isActive = true
-        profileNameLabel.heightAnchor.constraint(equalToConstant: 49).isActive = true
+        profileNameField.topAnchor.constraint(equalTo: profileContainerView.topAnchor, constant: 0).isActive=true
+        profileNameField.leftAnchor.constraint(equalTo: profileContainerView.leftAnchor, constant: 10).isActive = true
+        profileNameField.rightAnchor.constraint(equalTo: profileContainerView.rightAnchor, constant: -10).isActive = true
+        profileNameField.heightAnchor.constraint(equalToConstant: 49).isActive = true
         
-        profileBorderDevider.topAnchor.constraint(equalTo: profileNameLabel.bottomAnchor, constant: 0).isActive = true
-        profileBorderDevider.leftAnchor.constraint(equalTo: profileNameLabel.leftAnchor, constant: 0).isActive = true
-        profileBorderDevider.rightAnchor.constraint(equalTo: profileNameLabel.rightAnchor, constant: 0).isActive = true
-        profileBorderDevider.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        
-        profileEmailLabel.topAnchor.constraint(equalTo: profileBorderDevider.bottomAnchor, constant: 0).isActive = true
-        profileEmailLabel.leftAnchor.constraint(equalTo: profileNameLabel.leftAnchor, constant: 0).isActive = true
-        profileEmailLabel.rightAnchor.constraint(equalTo: profileNameLabel.rightAnchor, constant: 0).isActive = true
-        profileEmailLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        profileEmailField.topAnchor.constraint(equalTo: profileNameField.bottomAnchor, constant: 1).isActive = true
+        profileEmailField.leftAnchor.constraint(equalTo: profileNameField.leftAnchor, constant: 0).isActive = true
+        profileEmailField.rightAnchor.constraint(equalTo: profileNameField.rightAnchor, constant: 0).isActive = true
+        profileEmailField.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
     func setupProfileImageViewConstraints(){
@@ -163,8 +187,18 @@ class UserSettingsViewController: UIViewController {
         profileImageView.heightAnchor.constraint(equalToConstant: 90).isActive = true
     }
     
+    func setupProfileDeleteButtonConstraints(){
+        profileDeleteButton.topAnchor.constraint(equalTo: profileContainerView.bottomAnchor, constant: 12).isActive = true
+        profileDeleteButton.leftAnchor.constraint(equalTo: profileContainerView.leftAnchor, constant: 0).isActive = true
+        profileDeleteButton.widthAnchor.constraint(equalToConstant: 160).isActive = true
+        
+        profileDBHC = profileDeleteButton.heightAnchor.constraint(equalToConstant: 0)
+        profileDBHC?.isActive = true
+    }
+    
     @objc func closeSettingsViewController(){
-        profileState = false
+        profileEmailField.isUserInteractionEnabled = false
+        profileNameField.isUserInteractionEnabled = false
         dismiss(animated: true, completion: nil)
     }
     
