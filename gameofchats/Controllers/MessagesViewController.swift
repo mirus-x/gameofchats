@@ -12,19 +12,7 @@ import FirebaseAuth
 
 class MessagesViewController: UITableViewController {
     
-    let navigationTitleButton: UIButton = {
-        let button =  UIButton(type: .system)
-        button.addTarget(self, action: #selector(showUserProfileSettings), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
     
-    @objc func showUserProfileSettings(){
-        print("user profile settings")
-    }
-    
-//    self.navigationItem.titleView = button
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -37,6 +25,13 @@ class MessagesViewController: UITableViewController {
         
         checkIfUserIsLogedIn()
     }
+    
+    @objc func showUserProfileSettings(){
+        let settingsPage = UserSettingsViewController()
+        let navController = UINavigationController(rootViewController: settingsPage)
+        present(navController, animated: true, completion: nil)
+    }
+    
     
     @objc func handleNewMessage(){
         let newMessageController = NewMessageViewController()
@@ -56,8 +51,10 @@ class MessagesViewController: UITableViewController {
             ref = Database.database().reference().child("users").child(uid!)
             ref.observe(.value, with: { (snapshot) in
                 if let dictionary  = snapshot.value as? [String:Any]{
-                    self.navigationTitleButton.setTitle(dictionary["name"] as? String, for: .normal)
-                    self.navigationItem.titleView = self.navigationTitleButton
+                    let button =  UIButton(type: .system)
+                    button.addTarget(self, action: #selector(self.showUserProfileSettings), for: .touchUpInside)
+                    button.setTitle(dictionary["name"] as? String, for: .normal)
+                    self.navigationItem.titleView = button
                 }
             }, withCancel: nil)
             
