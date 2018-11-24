@@ -9,10 +9,10 @@
 import UIKit
 import FirebaseDatabase
 
-class UserSettingsViewController: UIViewController, UIImagePickerControllerDelegate {
+class UserSettingsViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     var profileState: Bool = false
-    
+    let imagePicker = UIImagePickerController()
     
     let profileContainerView: UIView = {
         let view = UIView()
@@ -36,11 +36,17 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
     }()
     
     let profileImageView: UIImageView = {
-        let imageView = UIImageView()
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 120, height: 120))
         imageView.image = UIImage(named: "wolf")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = UIView.ContentMode.scaleAspectFill
         imageView.isUserInteractionEnabled = false
+        
+        imageView.layer.borderWidth = 0
+        imageView.layer.masksToBounds = false
+        imageView.layer.cornerRadius = 60
+        imageView.clipsToBounds = true
+        
         return imageView
     }()
     
@@ -83,6 +89,7 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
         super.viewDidLoad()
         view.backgroundColor = Colors.loginBgBlue
         self.setNeedsStatusBarAppearanceUpdate()
+        imagePicker.delegate = self
         setupNavigationBarStyles()
         // Do any additional setup after loading the view.
         
@@ -93,6 +100,27 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
         setupProfileContainerViewConstraints()
         setupProfileImageViewConstraints()
         setupProfileDeleteButtonConstraints()
+        
+        
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        var selectedImageFromPicker: UIImage?
+        if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage{
+            selectedImageFromPicker = editedImage
+        }else if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            selectedImageFromPicker = pickedImage
+        }
+        
+        if let selectedImage = selectedImageFromPicker{
+            profileImageView.image = selectedImage
+        }
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
     
     @objc func handleProfileDelete(){
@@ -133,7 +161,10 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
     }
     
     @objc func changeUserProfileImage(){
-        print("image tapped")
+        imagePicker.allowsEditing = true
+        imagePicker.sourceType = .photoLibrary
+        
+        present(imagePicker, animated: true, completion: nil)
     }
     
     
@@ -182,14 +213,14 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
         
         profileImageContainerView.addSubview(profileImageView)
         profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        profileImageView.bottomAnchor.constraint(equalTo: profileImageContainerView.bottomAnchor, constant: -15).isActive = true
-        profileImageView.widthAnchor.constraint(equalToConstant: 90).isActive = true
-        profileImageView.heightAnchor.constraint(equalToConstant: 90).isActive = true
+        profileImageView.bottomAnchor.constraint(equalTo: profileImageContainerView.bottomAnchor, constant: 0).isActive = true
+        profileImageView.widthAnchor.constraint(equalToConstant: 120).isActive = true
+        profileImageView.heightAnchor.constraint(equalToConstant: 120).isActive = true
     }
     
     func setupProfileDeleteButtonConstraints(){
-        profileDeleteButton.topAnchor.constraint(equalTo: profileContainerView.bottomAnchor, constant: 12).isActive = true
-        profileDeleteButton.leftAnchor.constraint(equalTo: profileContainerView.leftAnchor, constant: 0).isActive = true
+        profileDeleteButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        profileDeleteButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 12).isActive = true
         profileDeleteButton.widthAnchor.constraint(equalToConstant: 160).isActive = true
         
         profileDBHC = profileDeleteButton.heightAnchor.constraint(equalToConstant: 0)

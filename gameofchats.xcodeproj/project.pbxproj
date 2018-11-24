@@ -23,6 +23,8 @@
 		8EAFB70C219B950600CFE6D6 /* NewMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EAFB70B219B950600CFE6D6 /* NewMessageViewController.swift */; };
 		8EAFB70F219C948500CFE6D6 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EAFB70E219C948500CFE6D6 /* User.swift */; };
 		8EB52A86219CD2E900BA847E /* UserSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB52A85219CD2E900BA847E /* UserSettingsViewController.swift */; };
+		8EB52A8921A9C79500BA847E /* LoginController+Constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB52A8821A9C79500BA847E /* LoginController+Constraints.swift */; };
+		8EB52A8B21A9CB7100BA847E /* LoginController+Handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB52A8A21A9CB7100BA847E /* LoginController+Handlers.swift */; };
 		CF8DE5F0ECEBB992C6B3392D /* Pods_gameofchatsUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEC5C064468B7C9303758893 /* Pods_gameofchatsUITests.framework */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +70,8 @@
 		8EAFB70B219B950600CFE6D6 /* NewMessageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageViewController.swift; sourceTree = "<group>"; };
 		8EAFB70E219C948500CFE6D6 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		8EB52A85219CD2E900BA847E /* UserSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsViewController.swift; sourceTree = "<group>"; };
+		8EB52A8821A9C79500BA847E /* LoginController+Constraints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginController+Constraints.swift"; sourceTree = "<group>"; };
+		8EB52A8A21A9CB7100BA847E /* LoginController+Handlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginController+Handlers.swift"; sourceTree = "<group>"; };
 		9DE2E2A8BC497E14ABA7131E /* Pods-gameofchatsTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-gameofchatsTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-gameofchatsTests/Pods-gameofchatsTests.release.xcconfig"; sourceTree = "<group>"; };
 		9F7E6B30D8E0906351AD9DBB /* Pods-gameofchatsTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-gameofchatsTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-gameofchatsTests/Pods-gameofchatsTests.debug.xcconfig"; sourceTree = "<group>"; };
 		AEC5C064468B7C9303758893 /* Pods_gameofchatsUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_gameofchatsUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -185,7 +189,7 @@
 		8E94ACEF2198A05E003923E2 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				8E94ACF02198A09C003923E2 /* LoginController.swift */,
+				8EB52A8721A9C73700BA847E /* Login */,
 				8E94ACC021989E3E003923E2 /* MessagesViewController.swift */,
 				8EAFB70B219B950600CFE6D6 /* NewMessageViewController.swift */,
 				8EB52A85219CD2E900BA847E /* UserSettingsViewController.swift */,
@@ -208,6 +212,16 @@
 				8EAFB70E219C948500CFE6D6 /* User.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		8EB52A8721A9C73700BA847E /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				8E94ACF02198A09C003923E2 /* LoginController.swift */,
+				8EB52A8821A9C79500BA847E /* LoginController+Constraints.swift */,
+				8EB52A8A21A9CB7100BA847E /* LoginController+Handlers.swift */,
+			);
+			path = Login;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -460,6 +474,8 @@
 			files = (
 				8E94ACF42198A2DD003923E2 /* Constants.swift in Sources */,
 				8E94ACC121989E3E003923E2 /* MessagesViewController.swift in Sources */,
+				8EB52A8921A9C79500BA847E /* LoginController+Constraints.swift in Sources */,
+				8EB52A8B21A9CB7100BA847E /* LoginController+Handlers.swift in Sources */,
 				8E94ACF12198A09C003923E2 /* LoginController.swift in Sources */,
 				8E94ACF62198CBE9003923E2 /* TextFieldBottomLineExtention.swift in Sources */,
 				8EB52A86219CD2E900BA847E /* UserSettingsViewController.swift in Sources */,
