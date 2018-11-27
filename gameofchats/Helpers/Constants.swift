@@ -20,9 +20,17 @@ struct FontSizes {
     static let x16 = UIFont.systemFont(ofSize: 16)
 }
 
+
+struct PathUrls {
+    static let firebase = "https://gameofchats-lbta.firebaseio.com/"
+    static let firestore = "gs://gameofchats-lbta.appspot.com"
+}
+
 extension UIColor{
     
     convenience init(r: CGFloat, g: CGFloat, b: CGFloat) {
         self.init(red: r/255, green: g/255, blue: b/255, alpha: 1)
     }
 }
+
+

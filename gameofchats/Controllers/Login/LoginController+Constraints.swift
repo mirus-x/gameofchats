@@ -11,7 +11,7 @@ import UIKit
 
 extension LoginController{
     /*
-     Constraints oveerrirde functions for subviews gose here
+     Constraints goes here
      */
     
     static var inputContainerViewHeightAncor: NSLayoutConstraint?

@@ -8,6 +8,8 @@
 
 import UIKit
 import FirebaseDatabase
+import Firebase
+import FirebaseStorage
 
 class UserSettingsViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -37,7 +39,15 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
     
     let profileImageView: UIImageView = {
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 120, height: 120))
-        imageView.image = UIImage(named: "wolf")
+        let user = Auth.auth().currentUser
+        
+        if let user = user {
+            let iurl = user.photoURL
+            let idata = try? Data(contentsOf: iurl!)
+            imageView.image = UIImage(data: idata!)
+        } else {
+            imageView.image = UIImage(named: "wolf")
+        }
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = UIView.ContentMode.scaleAspectFill
         imageView.isUserInteractionEnabled = false
@@ -116,6 +126,39 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
         if let selectedImage = selectedImageFromPicker{
             profileImageView.image = selectedImage
         }
+        
+        let currentTimeStamp = NSDate().timeIntervalSince1970.toString()
+        let storageRef = Storage.storage(url: PathUrls.firestore).reference().child("\(currentTimeStamp)_got.png")
+        
+        if let uploadImage = self.profileImageView.image!.pngData(){
+            storageRef.putData(uploadImage, metadata: nil) { (metadata, error) in
+                if error != nil{
+                    print("Error: ", error!)
+                    return
+                }
+                
+                storageRef.downloadURL(completion: { (url, error) in
+                    guard let imageUrl = url else{
+                        print("Could not find image URL. Error: ", error!)
+                        return
+                    }
+                    
+                    let user = Auth.auth().currentUser
+                    
+                    if let user = user {
+                        user.createProfileChangeRequest().photoURL = imageUrl
+                    } else {
+                        let logout = MessagesViewController()
+                        logout.handleLogoutPress()
+                    }
+                    
+                })
+                
+            }
+            
+        }
+        
+        
         dismiss(animated: true, completion: nil)
     }
     
@@ -143,6 +186,8 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
         profileImageView.isUserInteractionEnabled = false
     }
     
+    
+    
     @objc func editUserProfile(){
         // show edit information view
         
@@ -168,64 +213,6 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
     }
     
     
-    func setupNavigationBarStyles(){
-        let leftNavButton = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(closeSettingsViewController))
-        leftNavButton.tintColor = Colors.white
-        navigationItem.leftBarButtonItem = leftNavButton
-        
-        let rightNavButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editUserProfile))
-        rightNavButton.tintColor = Colors.white
-        navigationItem.rightBarButtonItem = rightNavButton
-        
-        navigationController?.navigationBar.barTintColor = Colors.loginBgBlue
-        navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Colors.white]
-    }
-    
-    var profileContainerViewHeightAncor: NSLayoutConstraint?
-    func setupProfileContainerViewConstraints(){
-        profileContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        profileContainerView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        profileContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -24).isActive = true
-        profileContainerViewHeightAncor = profileContainerView.heightAnchor.constraint(equalToConstant: 100)
-        profileContainerViewHeightAncor?.isActive = true
-        
-        profileContainerView.addSubview(profileNameField)
-        profileContainerView.addSubview(profileEmailField)
-        
-        profileNameField.topAnchor.constraint(equalTo: profileContainerView.topAnchor, constant: 0).isActive=true
-        profileNameField.leftAnchor.constraint(equalTo: profileContainerView.leftAnchor, constant: 10).isActive = true
-        profileNameField.rightAnchor.constraint(equalTo: profileContainerView.rightAnchor, constant: -10).isActive = true
-        profileNameField.heightAnchor.constraint(equalToConstant: 49).isActive = true
-        
-        profileEmailField.topAnchor.constraint(equalTo: profileNameField.bottomAnchor, constant: 1).isActive = true
-        profileEmailField.leftAnchor.constraint(equalTo: profileNameField.leftAnchor, constant: 0).isActive = true
-        profileEmailField.rightAnchor.constraint(equalTo: profileNameField.rightAnchor, constant: 0).isActive = true
-        profileEmailField.heightAnchor.constraint(equalToConstant: 50).isActive = true
-    }
-    
-    func setupProfileImageViewConstraints(){
-        profileImageContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        profileImageContainerView.bottomAnchor.constraint(equalTo: profileContainerView.topAnchor, constant: -24).isActive = true
-        profileImageContainerView.widthAnchor.constraint(equalToConstant: 120).isActive = true
-        profileImageContainerView.heightAnchor.constraint(equalToConstant: 120).isActive = true
-        profileImageContainerView.layoutMargins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        
-        profileImageContainerView.addSubview(profileImageView)
-        profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        profileImageView.bottomAnchor.constraint(equalTo: profileImageContainerView.bottomAnchor, constant: 0).isActive = true
-        profileImageView.widthAnchor.constraint(equalToConstant: 120).isActive = true
-        profileImageView.heightAnchor.constraint(equalToConstant: 120).isActive = true
-    }
-    
-    func setupProfileDeleteButtonConstraints(){
-        profileDeleteButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        profileDeleteButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 12).isActive = true
-        profileDeleteButton.widthAnchor.constraint(equalToConstant: 160).isActive = true
-        
-        profileDBHC = profileDeleteButton.heightAnchor.constraint(equalToConstant: 0)
-        profileDBHC?.isActive = true
-    }
     
     @objc func closeSettingsViewController(){
         profileEmailField.isUserInteractionEnabled = false
