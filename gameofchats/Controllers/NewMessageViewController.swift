@@ -63,6 +63,7 @@ class NewMessageViewController: UITableViewController {
         let user = self.users[indexPath.row]
         cell.textLabel?.text = user.name
         cell.detailTextLabel?.text = user.email
+//        cell.imageView?.image = user.photoUr
         return cell
     }
 

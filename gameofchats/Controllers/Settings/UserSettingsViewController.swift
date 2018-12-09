@@ -39,15 +39,7 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
     
     let profileImageView: UIImageView = {
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 120, height: 120))
-        let user = Auth.auth().currentUser
-        
-        if let user = user {
-            let iurl = user.photoURL
-            let idata = try? Data(contentsOf: iurl!)
-            imageView.image = UIImage(data: idata!)
-        } else {
-            imageView.image = UIImage(named: "wolf")
-        }
+        imageView.image = UIImage(named: "wolf")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = UIView.ContentMode.scaleAspectFill
         imageView.isUserInteractionEnabled = false
@@ -111,10 +103,43 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
         setupProfileImageViewConstraints()
         setupProfileDeleteButtonConstraints()
         
+        // load profile image if any exist
+        
+        guard let user = Auth.auth().currentUser else {
+            print("Error! User is not authenticated!")
+            let logout = MessagesViewController()
+            logout.handleLogoutPress()
+            return
+        }
+        
+        
+        if let profileImage = user.photoURL?.absoluteString{
+        guard let url = NSURL(string: profileImage) else { return }
+            URLSession.shared.dataTask(with: url as URL) { (data, response, error) in
+            guard
+                let httpURLResponse = response as? HTTPURLResponse, httpURLResponse.statusCode == 200,
+                let mimeType = response?.mimeType, mimeType.hasPrefix("image"),
+                let data = data, error == nil,
+                let image = UIImage(data: data)
+                else { return }
+                DispatchQueue.main.async(execute: { () -> Void in
+                    self.profileImageView.image = image
+                })
+            }.resume()
+        }
+        
+        self.profileNameField.text = user.displayName
+        self.profileEmailField.text = user.email
         
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        guard let user = Auth.auth().currentUser else {
+            let logout = MessagesViewController()
+            logout.handleLogoutPress()
+            return
+        }
+        
         
         var selectedImageFromPicker: UIImage?
         if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage{
@@ -142,23 +167,20 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
                         print("Could not find image URL. Error: ", error!)
                         return
                     }
-                    
-                    let user = Auth.auth().currentUser
-                    
-                    if let user = user {
-                        user.createProfileChangeRequest().photoURL = imageUrl
-                    } else {
-                        let logout = MessagesViewController()
-                        logout.handleLogoutPress()
+                    //user.createProfileChangeRequest().photoURL = imageUrl
+                    let changeRequest = user.createProfileChangeRequest()
+                    changeRequest.photoURL = imageUrl
+                    changeRequest.commitChanges { error in
+                        if let _ = error {
+                            print("Try Again")
+                        } else {
+                            print(user.photoURL?.absoluteString)
+                            print("Photo Updated")
+                        }
                     }
-                    
                 })
-                
             }
-            
         }
-        
-        
         dismiss(animated: true, completion: nil)
     }
     
