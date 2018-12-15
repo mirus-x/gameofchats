@@ -36,7 +36,6 @@ extension LoginController{
                 print("Signing in failed! Error : ", error! )
                 return
             }
-            
             self.dismiss(animated: true, completion: nil)
         }
     }
@@ -54,8 +53,18 @@ extension LoginController{
                 return
             }
             
-            //            guard let user = authResult?.user else { return }
-            guard let uid = authResult?.user.uid else {return}
+            guard let userRef = authResult?.user else {return}
+            
+            let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
+            changeRequest?.displayName = name
+            
+            changeRequest?.commitChanges { error in
+                if let error = error {
+                    print(error)
+                    return
+                }
+            }
+            let uid = userRef.uid
             
             var ref: DatabaseReference!
             ref = Database.database().reference(fromURL: "https://gameofchats-lbta.firebaseio.com/")
@@ -66,12 +75,9 @@ extension LoginController{
                     print("Error: Unable to register new user. ", writeError!)
                     return
                 }
-                
                 print("New user was registered successfully")
                 self.dismiss(animated: true, completion: nil)
             })
-            
-            
         }
     }
     

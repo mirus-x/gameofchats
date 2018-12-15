@@ -12,6 +12,7 @@ struct Colors {
     static let loginBgBlue = UIColor(r: 61, g: 91, b: 151)
     static let loginRegBtn = UIColor(r: 80, g: 101, b: 161)
     static let borderCololor = UIColor(r: 220, g: 220, b: 220)
+    static let systemColor = UIColor(r: 44, g: 140, b: 250)
     static let white = UIColor.white
     
 }

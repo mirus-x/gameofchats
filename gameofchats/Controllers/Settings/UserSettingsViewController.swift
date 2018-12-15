@@ -57,7 +57,7 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
     let profileEmailField: UITextField = {
         let tf = UITextField()
         tf.translatesAutoresizingMaskIntoConstraints = false
-        tf.text = "Email: "
+        tf.placeholder = "Email"
         tf.textColor = Colors.loginRegBtn
         tf.isUserInteractionEnabled = false
         return tf
@@ -66,7 +66,7 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
     let profileNameField: UITextField = {
         let tf = UITextField()
         tf.translatesAutoresizingMaskIntoConstraints = false
-        tf.text = "Name: "
+        tf.placeholder = "Name"
         tf.textColor = Colors.loginRegBtn
         tf.isUserInteractionEnabled = false
         tf.setBottomBorder()
@@ -128,8 +128,14 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
             }.resume()
         }
         
-        self.profileNameField.text = user.displayName
-        self.profileEmailField.text = user.email
+        if let pname = user.displayName{
+            self.profileNameField.text = pname
+            print(pname)
+        }
+        
+        if let pemail = user.email{
+            self.profileEmailField.text = pemail
+        }
         
     }
     
@@ -173,9 +179,6 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
                     changeRequest.commitChanges { error in
                         if let _ = error {
                             print("Try Again")
-                        } else {
-                            print(user.photoURL?.absoluteString)
-                            print("Photo Updated")
                         }
                     }
                 })
@@ -189,7 +192,65 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
     }
     
     @objc func handleProfileDelete(){
+        let dialogMessage = UIAlertController(title: "Confirm", message: "Are you sure you want to delete your profile? if \"yes\" please insert you password bellow", preferredStyle: .alert)
+        
+        // Create OK button with action handler
+        
+        dialogMessage.addTextField { (textField) in
+            textField.placeholder = "Password"
+            textField.isSecureTextEntry = true
+        }
+        
+        let ok = UIAlertAction(title: "Delete", style: .default, handler: { (action) -> Void in
+            if let password = (dialogMessage.textFields![0] as UITextField).text{
+                self.deleteRecord(password: password)
+            }
+        })
+        
+        
+        // Create Cancel button with action handlder
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) -> Void in
+            print("Cancel button tapped")
+        }
+        
+        //Add OK and Cancel button to dialog message
+        dialogMessage.addAction(ok)
+        dialogMessage.addAction(cancel)
+        
+        // Present dialog message to user
+        self.present(dialogMessage, animated: true, completion: nil)
+    }
     
+    func deleteRecord(password: String)
+    {
+        let user = Auth.auth().currentUser
+        
+        let credential = EmailAuthProvider.credential(withEmail: (user?.email)!, password: password)
+        
+        user?.reauthenticateAndRetrieveData(with: credential, completion: { (result, error) in
+            print(result)
+            if let error = error {
+                // handle error here
+                print(error)
+            }else{
+                user?.delete { error in
+                    if let error = error {
+                        print(error)
+                    }else{
+                        do {
+                            try Auth.auth().signOut()
+                            self.dismiss(animated: true, completion: nil)
+                            let loginController = LoginController()
+                            self.present(loginController, animated: true, completion: nil)
+                        } catch let logoutError {
+                            print(logoutError)
+                        }
+                    }
+                }
+            }
+        })
+        
+        
     }
     
     
@@ -206,6 +267,13 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
         navigationItem.rightBarButtonItem = rightNavButton
         
         profileImageView.isUserInteractionEnabled = false
+        let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
+        changeRequest?.displayName = profileNameField.text
+        changeRequest?.commitChanges{ (error) in
+            if let error = error{
+                print(error)
+            }
+        }
     }
     
     
@@ -214,7 +282,7 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
         // show edit information view
         
         profileDBHC?.constant = 50
-        profileEmailField.isUserInteractionEnabled = true
+        profileEmailField.isUserInteractionEnabled = false
         profileNameField.isUserInteractionEnabled = true
         //change button state (my be need to define global button ???
         let rightNavButton = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveUserProfile))
@@ -224,7 +292,6 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
         let pictureTap = UITapGestureRecognizer(target: self, action: #selector(changeUserProfileImage))
         profileImageView.addGestureRecognizer(pictureTap)
         profileImageView.isUserInteractionEnabled = true
-        
     }
     
     @objc func changeUserProfileImage(){
@@ -245,7 +312,6 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
     override var preferredStatusBarStyle: UIStatusBarStyle{
         return .lightContent
     }
-
 }
 
 

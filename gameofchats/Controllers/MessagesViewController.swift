@@ -11,7 +11,13 @@ import FirebaseDatabase
 import FirebaseAuth
 
 class MessagesViewController: UITableViewController {
-    
+    let titleButton: UIButton = {
+        let button =  UIButton(type: .system)
+        button.addTarget(self, action: #selector(showUserProfileSettings), for: .touchUpInside)
+        button.setTitle("User Name", for: .normal)
+        button.tintColor = Colors.systemColor
+        return button
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,7 +29,17 @@ class MessagesViewController: UITableViewController {
         let image = UIImage(named: "new_message_icon")
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessage))
         
-        checkIfUserIsLogedIn()
+        let user = Auth.auth().currentUser
+        if user?.uid == nil{
+            perform(#selector(handleLogoutPress), with: nil, afterDelay: 0)
+        }else{
+            let button =  UIButton(type: .system)
+            button.addTarget(self, action: #selector(self.showUserProfileSettings), for: .touchUpInside)
+            button.tintColor = Colors.systemColor
+            button.setTitle(user?.displayName, for: .normal)
+            self.navigationItem.titleView = button
+            self.navigationItem.largeTitleDisplayMode = .automatic
+        }
     }
     
     @objc func showUserProfileSettings(){
@@ -37,29 +53,6 @@ class MessagesViewController: UITableViewController {
         let newMessageController = NewMessageViewController()
         let navController = UINavigationController(rootViewController: newMessageController)
         present(navController, animated: true, completion: nil)
-    }
-    
-    func checkIfUserIsLogedIn(){
-        if Auth.auth().currentUser?.uid == nil{
-            perform(#selector(handleLogoutPress), with: nil, afterDelay: 0)
-        }else{
-        
-            // fetch data
-            let uid = Auth.auth().currentUser?.uid
-            
-            var ref: DatabaseReference!
-            ref = Database.database().reference().child("users").child(uid!)
-            ref.observe(.value, with: { (snapshot) in
-                if let dictionary  = snapshot.value as? [String:Any]{
-                    let button =  UIButton(type: .system)
-                    button.addTarget(self, action: #selector(self.showUserProfileSettings), for: .touchUpInside)
-                    button.setTitle(dictionary["name"] as? String, for: .normal)
-                    self.navigationItem.titleView = button
-                }
-            }, withCancel: nil)
-            
-            
-        }
     }
     
     @objc func handleLogoutPress(){
