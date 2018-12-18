@@ -11,6 +11,7 @@ import FirebaseDatabase
 import Firebase
 import FirebaseStorage
 
+
 class UserSettingsViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     var profileState: Bool = false
@@ -228,7 +229,6 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
         let credential = EmailAuthProvider.credential(withEmail: (user?.email)!, password: password)
         
         user?.reauthenticateAndRetrieveData(with: credential, completion: { (result, error) in
-            print(result)
             if let error = error {
                 // handle error here
                 print(error)
@@ -249,8 +249,6 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
                 }
             }
         })
-        
-        
     }
     
     
@@ -272,6 +270,8 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
         changeRequest?.commitChanges{ (error) in
             if let error = error{
                 print(error)
+            }else{
+                self.delegate?.changeUserName(self.profileNameField.text)
             }
         }
     }
@@ -280,7 +280,6 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
     
     @objc func editUserProfile(){
         // show edit information view
-        
         profileDBHC?.constant = 50
         profileEmailField.isUserInteractionEnabled = false
         profileNameField.isUserInteractionEnabled = true

@@ -11,13 +11,6 @@ import FirebaseDatabase
 import FirebaseAuth
 
 class MessagesViewController: UITableViewController {
-    let titleButton: UIButton = {
-        let button =  UIButton(type: .system)
-        button.addTarget(self, action: #selector(showUserProfileSettings), for: .touchUpInside)
-        button.setTitle("User Name", for: .normal)
-        button.tintColor = Colors.systemColor
-        return button
-    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,13 +21,15 @@ class MessagesViewController: UITableViewController {
         
         let image = UIImage(named: "new_message_icon")
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessage))
-        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
         let user = Auth.auth().currentUser
         if user?.uid == nil{
             perform(#selector(handleLogoutPress), with: nil, afterDelay: 0)
         }else{
             let button =  UIButton(type: .system)
-            button.addTarget(self, action: #selector(self.showUserProfileSettings), for: .touchUpInside)
+            button.addTarget(self, action: #selector(showUserProfileSettings), for: .touchUpInside)
             button.tintColor = Colors.systemColor
             button.setTitle(user?.displayName, for: .normal)
             self.navigationItem.titleView = button
