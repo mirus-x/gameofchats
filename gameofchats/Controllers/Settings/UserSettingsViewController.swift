@@ -270,8 +270,6 @@ class UserSettingsViewController: UIViewController, UIImagePickerControllerDeleg
         changeRequest?.commitChanges{ (error) in
             if let error = error{
                 print(error)
-            }else{
-                self.delegate?.changeUserName(self.profileNameField.text)
             }
         }
     }

@@ -49,7 +49,7 @@ extension LoginController{
         
         Auth.auth().createUser(withEmail: email, password: password) {(authResult, error) in
             if  error != nil {
-                print("Error! : ", error! )
+                print("Error! : ", error!)
                 return
             }
             
@@ -65,10 +65,12 @@ extension LoginController{
                 }
             }
             let uid = userRef.uid
-            
+
             var ref: DatabaseReference!
             ref = Database.database().reference(fromURL: "https://gameofchats-lbta.firebaseio.com/")
             let userReference = ref.child("users").child(uid)
+
+
             let values = ["name": name, "email": email]
             userReference.updateChildValues(values, withCompletionBlock: { (writeError, ref) in
                 if writeError != nil{
